@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -13,7 +14,7 @@ async function bootstrap() {
     credentials: true,
   });
   const logger = app.get(TSLogger);
-
+  app.useGlobalPipes(new ValidationPipe());
   const serverPort = configService.get<number>('SERVER_PORT');
   logger.log(`Server is running on port ${serverPort}`);
   await app.listen(serverPort);

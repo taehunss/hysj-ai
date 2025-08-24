@@ -9,7 +9,6 @@ export const Page = styled.div`
     "sidebar main"
     "sidebar input";
   height: 100vh;
-  background: #f2f3f5;
 
   /* Mobile first: 430x932 기준 단일 컬럼 */
   @media (max-width: 768px) {
@@ -73,7 +72,7 @@ export const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: transparent;
   border-bottom: 1px solid #ececec;
   padding-top: env(safe-area-inset-top);
   height: 100%;
@@ -85,7 +84,7 @@ export const Main = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: transparent;
   padding: 16px;
 `;
 
@@ -94,7 +93,7 @@ export const Card = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  background: #f6f3ec;
+  background: rgba(255, 255, 255, 0.6); /* 한지 위에 얇은 카드감 */
   border-radius: 18px;
   padding: 24px 28px;
   width: min(640px, 100%);
@@ -106,7 +105,7 @@ export const ChatListCard = styled(Card)`
   height: 100%;
   max-width: 680px;
   align-items: stretch;
-  background-color: aliceblue;
+  background: rgba(255, 255, 255, 0.6);
 `;
 
 export const CTA = styled.button`
@@ -129,7 +128,7 @@ export const InputBar = styled.form`
   gap: 8px;
   align-items: center;
   padding: 8px 16px;
-  background: #f2f3f5;
+  background: rgba(255, 255, 255, 0.6);
   padding-bottom: max(8px, env(safe-area-inset-bottom));
   position: sticky;
   bottom: 0;

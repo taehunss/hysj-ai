@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useChatSocket } from "../hook/useChatSocket";
+import { BirthInfoModal } from "./BirthInfoModal";
 import {
   AvatarCircle,
   Backdrop,
@@ -30,6 +31,7 @@ const ChatRoom: React.FC = () => {
   const [input, setInput] = useState("");
   const { messages, sendMessage } = useChatSocket();
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -76,7 +78,9 @@ const ChatRoom: React.FC = () => {
         {messages.length === 0 ? (
           <Card>
             <IntroTitle>내 사주가 궁금하다면?</IntroTitle>
-            <CTA>생년월일 입력하러 가기 〉</CTA>
+            <CTA onClick={() => setModalOpen(true)}>
+              생년월일 입력하러 가기 〉
+            </CTA>
           </Card>
         ) : (
           <ChatListCard>
@@ -95,6 +99,7 @@ const ChatRoom: React.FC = () => {
           </ChatListCard>
         )}
       </Main>
+      <BirthInfoModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       <InputBar
         onSubmit={(e) => {
