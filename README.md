@@ -170,4 +170,3 @@ hanyangsaju-ai/
 ## 기여
 
 - Issue/PR 환영. 초기 구조 안정화 전까지는 핵심 모듈 위주 변경을 권장합니다.
-# hysj-ai

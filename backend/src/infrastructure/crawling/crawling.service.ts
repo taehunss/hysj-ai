@@ -11,14 +11,11 @@ export class CrawlingService {
     private readonly browserManager: BrowserManager,
   ) {}
 
-  public async getPage(
-    url: string,
-    headless: boolean = true,
-  ): Promise<{
+  public async getPage(url: string): Promise<{
     page: Page;
     browser: Browser;
   }> {
-    return await this.browserManager.getPage(url, headless);
+    return await this.browserManager.getPage(url);
   }
 
   public async waitFor(page: Page, selector: string, timeout = 3000) {

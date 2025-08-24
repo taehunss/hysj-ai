@@ -7,7 +7,8 @@ import { TSLogger } from './logger';
 @Global()
 @Module({
   imports: [EventEmitterModule.forRoot()],
-  providers: [TSLogger, LogViewerGateway, LogViewerController],
+  providers: [TSLogger, LogViewerGateway],
+  controllers: [LogViewerController],
   exports: [TSLogger, LogViewerGateway],
 })
 export class LoggerModule {}
