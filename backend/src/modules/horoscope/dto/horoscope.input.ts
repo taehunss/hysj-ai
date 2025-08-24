@@ -6,7 +6,7 @@ export enum Gender {
   FEMALE = 'female',
 }
 
-export enum HoroscopeType {
+export enum CalendarType {
   SOLAR = 'solar',
   LUNAR = 'lunar',
 }
@@ -54,10 +54,10 @@ export class HoroscopeInput {
   })
   gender: Gender;
 
-  @IsEnum(HoroscopeType)
+  @IsEnum(CalendarType)
   @ApiProperty({
     description: '타입',
     example: 'solar',
   })
-  type: HoroscopeType;
+  calendarType: CalendarType;
 }

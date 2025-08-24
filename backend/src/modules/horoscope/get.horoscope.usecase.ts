@@ -3,7 +3,7 @@ import { Lunar, Solar } from 'lunar-typescript';
 import { ChatGPTModel } from 'src/infrastructure/llm-model/chat-gpt.model';
 import { TSLogger } from 'src/infrastructure/logger/logger';
 import { BASE_INSTRUCTIONS } from '../chat/prompt/base.prompt';
-import { HoroscopeInput, HoroscopeType } from './dto/horoscope.input';
+import { CalendarType, HoroscopeInput } from './dto/horoscope.input';
 
 @Injectable()
 export class GetHoroscopeUsecase {
@@ -16,7 +16,7 @@ export class GetHoroscopeUsecase {
     input: HoroscopeInput,
   ): Promise<{ output_text: string; input_text: string }> {
     const horoscope =
-      input.type === HoroscopeType.SOLAR
+      input.calendarType === CalendarType.SOLAR
         ? this.getHoroscopeBySolar(input)
         : this.getHoroscopeByLunar(input);
     this.logger.log(horoscope);
