@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as openai from 'openai';
+import { ResponseStreamParams } from 'openai/lib/responses/ResponseStream';
 import type { ResponseStreamEvent } from 'openai/resources/responses/responses';
 import { Observable } from 'rxjs';
 import { EnvConfigService } from '../env-config/env-config.service';
@@ -33,12 +34,15 @@ export class ChatGPTModel {
   }
 
   async generateResponseStream(
-    input: string,
+    input: ResponseStreamParams,
     model: openai.OpenAI.AllModels,
     handlers?: ChatGPTResponseHandlers,
   ) {
     return new Observable<string>((subscriber) => {
-      const stream: any = this.openai.responses.stream({ model, input });
+      const stream: any = this.openai.responses.stream({
+        model,
+        ...input,
+      });
       let completed = false;
       let cancelled = false;
 
@@ -50,7 +54,6 @@ export class ChatGPTModel {
             (event as any).snapshot as string | undefined,
           );
           subscriber.next(delta);
-          console.log(delta);
         }
         handlers?.onEvent?.(event);
         if (event.type === 'response.completed') {

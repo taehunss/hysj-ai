@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useChatSocket } from "../hook/useChatSocket";
 import {
   AvatarCircle,
@@ -80,7 +82,13 @@ const ChatRoom: React.FC = () => {
           <ChatListCard>
             {messages.map((m, idx) => (
               <MessageBubble key={idx} isUser={m.role === "user"}>
-                {m.text}
+                {m.role === "user" ? (
+                  m.text
+                ) : (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {m.text}
+                  </ReactMarkdown>
+                )}
               </MessageBubble>
             ))}
             <div ref={bottomRef} />

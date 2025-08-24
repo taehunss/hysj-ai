@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Lunar, Solar } from 'lunar-typescript';
 import { ChatGPTModel } from 'src/infrastructure/llm-model/chat-gpt.model';
 import { TSLogger } from 'src/infrastructure/logger/logger';
+import { BASE_INSTRUCTIONS } from '../chat/prompt/base.prompt';
 import { HoroscopeInput, HoroscopeType } from './dto/horoscope.input';
 
 @Injectable()
@@ -38,7 +39,15 @@ export class GetHoroscopeUsecase {
     const horoscope = this.getHoroscopeBySolar(input);
 
     const responseStream = await this.chatGPTModel.generateResponseStream(
-      horoscope,
+      {
+        input: [
+          {
+            role: 'user',
+            content: horoscope,
+          },
+        ],
+        instructions: BASE_INSTRUCTIONS,
+      },
       'gpt-5',
       {
         onText: (delta: string, snapshot?: string) => {

@@ -5,6 +5,7 @@ import { ChatGPTModel } from 'src/infrastructure/llm-model/chat-gpt.model';
 import { TSLogger } from 'src/infrastructure/logger/logger';
 import { WebSocketService } from 'src/infrastructure/web-socket/web-socket.service';
 import { ChatEvent, ChatResponse } from './event/chat.event';
+import { BASE_INSTRUCTIONS } from './prompt/base.prompt';
 
 @Injectable()
 export class ChatHandler
@@ -39,7 +40,15 @@ export class ChatHandler
     try {
       this.logger.log(this.constructor.name, event);
       const observable = await this.chatGPTModel.generateResponseStream(
-        event.message,
+        {
+          input: [
+            {
+              role: 'user',
+              content: event.message,
+            },
+          ],
+          instructions: BASE_INSTRUCTIONS,
+        },
         'o3-mini',
       );
 
@@ -62,6 +71,17 @@ export class ChatHandler
 
   // 스트림을 노출해 게이트웨이/레지스트라에서 직접 전달 가능
   async stream(event: ChatEvent) {
-    return this.chatGPTModel.generateResponseStream(event.message, 'o3-mini');
+    return this.chatGPTModel.generateResponseStream(
+      {
+        input: [
+          {
+            role: 'user',
+            content: event.message,
+          },
+        ],
+        instructions: BASE_INSTRUCTIONS,
+      },
+      'o3-mini',
+    );
   }
 }

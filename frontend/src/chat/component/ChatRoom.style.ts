@@ -103,8 +103,10 @@ export const Card = styled.div`
 // 대화 리스트 표시용 카드(가로 폭과 정렬 조정)
 export const ChatListCard = styled(Card)`
   width: 100%;
+  height: 100%;
   max-width: 680px;
   align-items: stretch;
+  background-color: aliceblue;
 `;
 
 export const CTA = styled.button`
