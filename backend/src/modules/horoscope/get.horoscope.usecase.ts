@@ -47,7 +47,11 @@ export class GetHoroscopeUsecase {
       },
     );
 
-    await responseStream.done();
+    await responseStream.subscribe({
+      next: (delta) => {
+        this.logger.log(delta);
+      },
+    });
 
     return 'success';
   }

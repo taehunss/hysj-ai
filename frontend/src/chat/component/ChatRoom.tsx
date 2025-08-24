@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useChatSocket } from "../hook/useChatSocket";
 import {
   AvatarCircle,
   Backdrop,
   Card,
+  ChatListCard,
   CTA,
   HamburgerButton,
   Header,
   HeaderContent,
   InputBar,
+  IntroTitle,
   Logo,
   Main,
+  MessageBubble,
   NewChatButton,
   Page,
   Row,
@@ -21,6 +25,20 @@ import {
 
 const ChatRoom: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const { messages, sendMessage } = useChatSocket();
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const onSend = () => {
+    const text = input.trim();
+    if (!text) return;
+    setInput("");
+    sendMessage(text);
+  };
   const toggleSidebar = () => setSidebarOpen((v) => !v);
   const closeSidebar = () => setSidebarOpen(false);
   return (
@@ -53,15 +71,35 @@ const ChatRoom: React.FC = () => {
       <Backdrop open={sidebarOpen} onClick={closeSidebar} />
 
       <Main>
-        <Card>
-          <div style={{ fontWeight: 700 }}>내 사주가 궁금하다면?</div>
-          <CTA>생년월일 입력하러 가기 〉</CTA>
-        </Card>
+        {messages.length === 0 ? (
+          <Card>
+            <IntroTitle>내 사주가 궁금하다면?</IntroTitle>
+            <CTA>생년월일 입력하러 가기 〉</CTA>
+          </Card>
+        ) : (
+          <ChatListCard>
+            {messages.map((m, idx) => (
+              <MessageBubble key={idx} isUser={m.role === "user"}>
+                {m.text}
+              </MessageBubble>
+            ))}
+            <div ref={bottomRef} />
+          </ChatListCard>
+        )}
       </Main>
 
-      <InputBar onSubmit={(e) => e.preventDefault()}>
-        <TextInput placeholder="한양사주에게 물어보기" />
-        <SendButton>〉</SendButton>
+      <InputBar
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSend();
+        }}
+      >
+        <TextInput
+          placeholder="한양사주에게 물어보기"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <SendButton type="submit">〉</SendButton>
       </InputBar>
     </Page>
   );

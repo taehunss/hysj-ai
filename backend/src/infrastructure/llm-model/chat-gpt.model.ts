@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as openai from 'openai';
 import type { ResponseStreamEvent } from 'openai/resources/responses/responses';
+import { Observable } from 'rxjs';
 import { EnvConfigService } from '../env-config/env-config.service';
 import { TSLogger } from '../logger/logger';
 
@@ -35,25 +36,51 @@ export class ChatGPTModel {
     input: string,
     model: openai.OpenAI.AllModels,
     handlers?: ChatGPTResponseHandlers,
-  ): Promise<ChatGPTResponseStream> {
-    const stream = this.openai.responses.stream({
-      model,
-      input,
-    });
+  ) {
+    return new Observable<string>((subscriber) => {
+      const stream: any = this.openai.responses.stream({ model, input });
+      let completed = false;
+      let cancelled = false;
 
-    // 청크 단위 텍스트 델타 콘솔 로깅 및 콜백 전달
-    stream.on('event', (event: ResponseStreamEvent) => {
-      if (event.type === 'response.output_text.delta') {
-        // eslint-disable-next-line no-console
-        console.log(event.delta);
-        if (handlers?.onText) {
-          const snapshot = (event as any).snapshot as string | undefined;
-          handlers.onText(event.delta as unknown as string, snapshot);
+      const onEvent = (event: ResponseStreamEvent) => {
+        if (event.type === 'response.output_text.delta') {
+          const delta = (event.delta as unknown as string) ?? '';
+          handlers?.onText?.(
+            delta,
+            (event as any).snapshot as string | undefined,
+          );
+          subscriber.next(delta);
+          console.log(delta);
         }
-      }
-      if (handlers?.onEvent) handlers.onEvent(event);
-    });
+        handlers?.onEvent?.(event);
+        if (event.type === 'response.completed') {
+          completed = true;
+          subscriber.complete();
+        }
+      };
 
-    return stream as unknown as ChatGPTResponseStream;
+      stream.on('event', onEvent);
+
+      stream.on?.('error', (e: any) => {
+        // 사용자가 중단(abort)한 케이스는 오류로 전파하지 않고 종료 처리
+        const name = e?.name || e?.constructor?.name || '';
+        const msg = typeof e?.message === 'string' ? e.message : String(e);
+        if (cancelled || name.includes('Abort') || /aborted/i.test(msg)) {
+          if (!completed) subscriber.complete();
+          return;
+        }
+        subscriber.error(e);
+      });
+
+      stream.on?.('end', () => subscriber.complete());
+
+      return () => {
+        // 중단 신호를 보내지 않고 구독만 정리하여 OpenAI SDK의 Abort 예외를 회피한다.
+        cancelled = true;
+        try {
+          stream.off?.('event', onEvent);
+        } catch {}
+      };
+    });
   }
 }

@@ -100,6 +100,13 @@ export const Card = styled.div`
   width: min(640px, 100%);
 `;
 
+// 대화 리스트 표시용 카드(가로 폭과 정렬 조정)
+export const ChatListCard = styled(Card)`
+  width: 100%;
+  max-width: 680px;
+  align-items: stretch;
+`;
+
 export const CTA = styled.button`
   background: #e9e3d7;
   border: none;
@@ -107,6 +114,10 @@ export const CTA = styled.button`
   padding: 14px 24px;
   font-size: 18px;
   cursor: pointer;
+`;
+
+export const IntroTitle = styled.div`
+  font-weight: 700;
 `;
 
 export const InputBar = styled.form`
@@ -204,4 +215,15 @@ export const AvatarCircle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const MessageBubble = styled.div<{ isUser: boolean }>`
+  align-self: ${(p) => (p.isUser ? "flex-end" : "flex-start")};
+  background: ${(p) => (p.isUser ? "#007AFF" : "#E9ECEF")};
+  color: ${(p) => (p.isUser ? "#fff" : "#000")};
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin: 6px 0;
+  max-width: 90%;
+  word-break: break-word;
 `;
