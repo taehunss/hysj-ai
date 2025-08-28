@@ -15,7 +15,10 @@ import { WebSocketService } from './web-socket.service';
 @NestWebSocketGateway({
   namespace: 'ws',
   cors: {
-    origin: '*',
+    origin: (
+      origin: string,
+      cb: (err: Error | null, allowed?: boolean) => void,
+    ) => cb(null, true),
     methods: ['GET', 'POST'],
     credentials: true,
   },

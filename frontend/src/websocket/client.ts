@@ -23,17 +23,20 @@ class ChatSocketClient {
   };
 
   connect(callbacks?: ChatCallbacks) {
-    if (this.socket) return this.socket;
+    if (this.socket && this.socket.connected) return this.socket;
     const socket = io(this.opts.url, {
       path: this.opts.path,
-      transports: ["websocket"],
+      transports: ["websocket", "polling"],
+      withCredentials: true,
     });
 
-    socket.on("connect", () => callbacks?.onConnect?.(socket.id));
+    socket.on("connect", () => callbacks?.onConnect?.(socket.id ?? ""));
     socket.on("chat:delta", (data: string) => callbacks?.onDelta?.(data));
-    socket.on("chat:response", (data: { message: string }) =>
-      callbacks?.onResponse?.(data?.message)
-    );
+    socket.on("chat:response", (data: { message: string }) => {
+      callbacks?.onResponse?.(data?.message);
+      // 응답 완료 시 연결 종료 요구사항
+      this.disconnect();
+    });
     socket.on("chat:error", (msg: string) => callbacks?.onError?.(msg));
     socket.on("connect_error", (err: any) =>
       callbacks?.onError?.(err?.message ?? String(err))
@@ -49,6 +52,18 @@ class ChatSocketClient {
   emitChat(payload: ChatEvent) {
     if (!this.socket) throw new Error("Socket not connected");
     this.socket.emit("event", { event: "chat", payload });
+  }
+
+  disconnect() {
+    try {
+      this.socket?.disconnect();
+    } finally {
+      this.socket = null;
+    }
+  }
+
+  isConnected() {
+    return !!this.socket && this.socket.connected;
   }
 }
 

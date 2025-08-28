@@ -9,9 +9,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   swaggerBootstrap(app);
   const configService = app.get(EnvConfigService);
+  // main.ts
   app.enableCors({
-    origin: true,
+    origin: (origin, cb) => cb(null, true), // 모든 호스트 허용 (credentials와 함께 사용 가능)
     credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
+    ],
+    exposedHeaders: ['Content-Disposition'],
   });
   const logger = app.get(TSLogger);
   app.useGlobalPipes(new ValidationPipe());

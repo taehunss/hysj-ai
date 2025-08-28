@@ -33,6 +33,29 @@ export function useChatSocket() {
   }, []);
 
   const sendMessage = (text: string) => {
+    // 전송 전 연결이 끊겨 있다면 재연결
+    if (!chatSocketClient.isConnected()) {
+      chatSocketClient.connect({
+        onConnect: () => setIsConnected(true),
+        onDelta: (d) =>
+          setMessages((prev) => {
+            const last = prev[prev.length - 1];
+            if (last && last.role === "ai") {
+              const next = [...prev];
+              next[next.length - 1] = { role: "ai", text: last.text + d };
+              return next;
+            }
+            return [...prev, { role: "ai", text: d }];
+          }),
+        onResponse: () => setIsConnected(false),
+        onError: (msg) =>
+          setMessages((prev) => [
+            ...prev,
+            { role: "ai", text: `[error] ${msg}` },
+          ]),
+        onDisconnect: () => setIsConnected(false),
+      });
+    }
     const message = text.trim();
     if (!message) return;
     setMessages((prev) => [...prev, { role: "user", text: message }]);
