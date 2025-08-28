@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/infrastructure/database/entity/user.entity';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,6 +16,7 @@ export class CreateUserUsecase {
   async execute(input: UserDto) {
     const user = this.userRepository.create(input);
     user.code = uuidv4();
+    user.password = await bcrypt.hash(user.password, 10);
     await this.userRepository.save(user);
     return user;
   }
