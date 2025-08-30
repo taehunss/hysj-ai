@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { useEmailLogin } from "../hook/useEmailLogin";
 import {
   Body,
   BottomText,
@@ -20,6 +22,27 @@ import {
 } from "./LoginPage.style";
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
+  const {
+    email,
+    password,
+    isLoading,
+    handleEmailLogin,
+    setEmail,
+    setPassword,
+  } = useEmailLogin();
+
+  const onLoginClick = async () => {
+    try {
+      await handleEmailLogin();
+      // 로그인 성공 시 채팅 페이지로 이동
+      navigate("/chat");
+    } catch (error) {
+      // TODO: 에러 처리 (예: 에러 메시지 표시)
+      console.error("로그인 실패:", error);
+    }
+  };
+
   return (
     <Page>
       <Header>
@@ -32,14 +55,25 @@ export const LoginPage = () => {
         <Description>이메일과 비밀번호를 입력하여 로그인하세요.</Description>
         <InputContainer>
           <InputWrapper>
-            <Input placeholder="이메일" />
+            <Input
+              placeholder="이메일"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </InputWrapper>
           <InputWrapper>
-            <Input placeholder="비밀번호" type="password" />
+            <Input
+              placeholder="비밀번호"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <InputIcon src="/eye-off.png" alt="eye-off" />
           </InputWrapper>
         </InputContainer>
-        <LoginButton>로그인</LoginButton>
+        <LoginButton onClick={onLoginClick} disabled={isLoading}>
+          {isLoading ? "로그인 중..." : "로그인"}
+        </LoginButton>
         <Or src="/or.png" alt="hyunsujin" />
         <SocialLoginContainer>
           <SocialLoginButton>
@@ -62,8 +96,7 @@ export const LoginPage = () => {
           </SocialLoginButton>
         </SocialLoginContainer>
         <BottomTextWrapper>
-          <BottomText isLink={false}>아직 회원이 아니신가요?</BottomText>
-          <BottomText isLink={true}>회원가입 하러 가기</BottomText>
+          <BottomText>계정이 없으신가요? 회원가입</BottomText>
         </BottomTextWrapper>
       </Body>
     </Page>

@@ -228,3 +228,24 @@ export const MessageBubble = styled.div<{ isUser: boolean }>`
   max-width: 90%;
   word-break: break-word;
 `;
+
+export const LogoutButton = styled.button`
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #ff6b6b;
+  background: #fff5f5;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #ff6b6b;
+    color: white;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;

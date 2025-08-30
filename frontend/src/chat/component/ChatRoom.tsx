@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { useNavigate } from "react-router-dom";
 import remarkGfm from "remark-gfm";
+import { useAuth } from "../../context/AuthContext";
 import { useChatSocket } from "../hook/useChatSocket";
 import { BirthInfoModal } from "./BirthInfoModal";
 import {
@@ -15,6 +17,7 @@ import {
   InputBar,
   IntroTitle,
   Logo,
+  LogoutButton,
   Main,
   MessageBubble,
   NewChatButton,
@@ -27,6 +30,8 @@ import {
 } from "./ChatRoom.style";
 
 const ChatRoom: React.FC = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [input, setInput] = useState("");
   const { messages, sendMessage } = useChatSocket();
@@ -43,8 +48,15 @@ const ChatRoom: React.FC = () => {
     setInput("");
     sendMessage(text);
   };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   const toggleSidebar = () => setSidebarOpen((v) => !v);
   const closeSidebar = () => setSidebarOpen(false);
+
   return (
     <Page>
       <Sidebar open={sidebarOpen}>
@@ -61,6 +73,7 @@ const ChatRoom: React.FC = () => {
         <SidebarSection>마이페이지</SidebarSection>
         <SidebarSection>한양사주의 다른 서비스</SidebarSection>
         <SidebarSection>설정 및 도움말</SidebarSection>
+        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
       </Sidebar>
 
       <Header>

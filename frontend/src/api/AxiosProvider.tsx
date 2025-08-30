@@ -49,6 +49,11 @@ export const AxiosProvider: React.FC<{
     });
 
     instance.interceptors.request.use((cfg) => {
+      // localStorage에서 토큰 가져와서 헤더에 추가
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        cfg.headers.Authorization = `Bearer ${token}`;
+      }
       return cfg;
     });
 
