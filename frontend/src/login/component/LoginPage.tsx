@@ -96,7 +96,10 @@ export const LoginPage = () => {
           </SocialLoginButton>
         </SocialLoginContainer>
         <BottomTextWrapper>
-          <BottomText>계정이 없으신가요? 회원가입</BottomText>
+          <BottomText>계정이 없으신가요? </BottomText>
+          <BottomText isLink onClick={() => navigate("/login")}>
+            회원가입 하러가기
+          </BottomText>
         </BottomTextWrapper>
       </Body>
     </Page>

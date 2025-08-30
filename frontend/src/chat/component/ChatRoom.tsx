@@ -13,6 +13,7 @@ import {
   ChatListCard,
   CTA,
   HamburgerButton,
+  HamburgerButtonIcon,
   Header,
   HeaderContent,
   InputBar,
@@ -86,7 +87,7 @@ const ChatRoom: React.FC = () => {
 
       <Header>
         <HamburgerButton onClick={toggleSidebar} aria-label="open sidebar">
-          ☰
+          <HamburgerButtonIcon />
         </HamburgerButton>
         <HeaderContent>
           <h3>새로운 채팅</h3>
@@ -98,11 +99,7 @@ const ChatRoom: React.FC = () => {
         {messages.length === 0 ? (
           <Card>
             <Logo src="/hysj-logo.png" alt="hysj logo" />
-            <IntroTitle>
-              안녕하세요. {persons[0].name} 님,
-              <br />
-              한양사주 AI 입니다.
-            </IntroTitle>
+            <IntroTitle>안녕하세요. 한양사주 AI 입니다.</IntroTitle>
             {persons.length > 0 ? (
               <>
                 <IntroTitle3>무엇이든 물어보세요!</IntroTitle3>

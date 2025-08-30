@@ -59,17 +59,24 @@ export class ChatHandler {
     const input: ResponseStreamParams = {
       input: [
         {
-          role: 'user',
-          content: event.message,
-        },
-        {
           role: 'system',
           content: `
           양력 정보: ${solarString}
           음력 정보: ${lunarString}
 
-          넌 사주 전문가다. 이 양력과 음력 정보를 참고해서 답변해
+          You are a professional astrologist. 
+          Use the solar and lunar information to answer the question.
+          All answers should be in Korean.
+          You should focus on the user's question and answer in a way that is easy to understand.
+          using markdown to format your answer, and as possible using emojis.
+
+          max 1500 tokens for your answer.
+          Don't answer about unrelated topic.
           `,
+        },
+        {
+          role: 'user',
+          content: event.message,
         },
       ],
       instructions: BASE_INSTRUCTIONS,

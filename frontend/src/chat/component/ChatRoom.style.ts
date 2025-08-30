@@ -204,6 +204,13 @@ export const HamburgerButton = styled.button`
   }
 `;
 
+export const HamburgerButtonIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  background: url("/hamburger.png") no-repeat center center;
+  background-size: contain;
+`;
+
 export const Backdrop = styled.div<{ open?: boolean }>`
   position: fixed;
   inset: 0;
