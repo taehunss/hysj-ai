@@ -18,7 +18,9 @@ export type ChatCallbacks = {
 class ChatSocketClient {
   private socket: Socket | null = null;
   private opts: Required<ChatSocketOptions> = {
-    url: (import.meta as any)?.env?.VITE_WS_URL || "http://localhost:3333/ws",
+    url:
+      (import.meta as any)?.env?.VITE_WS_URL ||
+      "http://192.168.219.101:3333/ws",
     path: "/socket.io",
   };
 

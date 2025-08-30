@@ -22,6 +22,6 @@ export class CreatePersonUsecase {
     person.code = uuidv4();
     person.user = users[0];
     await this.personRepository.save(person);
-    return person.toDto();
+    return person;
   }
 }
