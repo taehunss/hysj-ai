@@ -1,8 +1,9 @@
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Logger } from 'src/common/logger/logger.interface';
 
 @Injectable()
-export class TSLogger extends ConsoleLogger {
+export class TSLogger extends ConsoleLogger implements Logger {
   constructor(private readonly eventEmitter: EventEmitter2) {
     super();
   }
