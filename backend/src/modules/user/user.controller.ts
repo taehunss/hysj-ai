@@ -1,23 +1,32 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreateUserUsecase } from './create.user.usecase';
-import { CreateUserInput } from './dto/create-user.dto';
-import { EmailLoginInput } from './dto/email-login.dto';
-import { EmailLoginUsecase } from './email-login.usecase';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { EmailSignInInput, EmailSignInOutput } from './dto/email.sign-in.dto';
+import { EmailSignUpInput, EmailSignUpOutput } from './dto/email.sign-up.dto';
+import { EmailSignInUsecase } from './email.sign-in.usecase';
+import { EmailSignUpUsecase } from './email.sign-up.usecase';
 
 @Controller('users')
 export class UserController {
   constructor(
-    private readonly createUserUsecase: CreateUserUsecase,
-    private readonly emailLoginUsecase: EmailLoginUsecase,
+    private readonly emailSignUpUsecase: EmailSignUpUsecase,
+    private readonly emailSigninUsecase: EmailSignInUsecase,
   ) {}
 
-  @Post('create')
-  async createUser(@Body() userDto: CreateUserInput) {
-    return this.createUserUsecase.execute(userDto);
+  @ApiOperation({ summary: 'Email Sign In' })
+  @ApiBody({ type: EmailSignInInput })
+  @Post('email/sign-in')
+  async emailLogin(
+    @Body() emailDto: EmailSignInInput,
+  ): Promise<EmailSignInOutput> {
+    return this.emailSigninUsecase.execute(emailDto);
   }
 
-  @Post('email-login')
-  async emailLogin(@Body() emailDto: EmailLoginInput) {
-    return this.emailLoginUsecase.execute(emailDto);
+  @ApiOperation({ summary: 'Email Sign Up' })
+  @ApiBody({ type: EmailSignUpInput })
+  @Post('email/sign-up')
+  async createUser(
+    @Body() input: EmailSignUpInput,
+  ): Promise<EmailSignUpOutput> {
+    return this.emailSignUpUsecase.execute(input);
   }
 }

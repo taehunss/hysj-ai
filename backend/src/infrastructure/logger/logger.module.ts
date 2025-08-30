@@ -3,7 +3,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { LOGGER } from 'src/common/logger/logger.interface';
 import { LogViewerController } from './log-viewer.controller';
 import { LogViewerGateway } from './log-viewer.gateway';
-import { TSLogger } from './logger';
+import { LoggerImpl } from './logger';
 
 @Global()
 @Module({
@@ -11,7 +11,7 @@ import { TSLogger } from './logger';
   providers: [
     {
       provide: LOGGER,
-      useClass: TSLogger,
+      useClass: LoggerImpl,
     },
     LogViewerGateway,
   ],

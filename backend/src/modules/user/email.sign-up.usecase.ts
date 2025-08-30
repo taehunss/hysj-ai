@@ -4,16 +4,16 @@ import {
   USER_REPOSITORY,
   UserRepository,
 } from './domain/user.repository.interface';
-import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
+import { EmailSignUpInput, EmailSignUpOutput } from './dto/email.sign-up.dto';
 
 @Injectable()
-export class CreateUserUsecase {
+export class EmailSignUpUsecase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
   ) {}
 
-  async execute(input: CreateUserInput): Promise<CreateUserOutput> {
+  async execute(input: EmailSignUpInput): Promise<EmailSignUpOutput> {
     const user = await User.create(input);
     const savedUser = await this.userRepository.save(user);
     return {

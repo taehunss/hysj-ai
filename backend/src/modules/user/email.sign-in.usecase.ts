@@ -6,10 +6,10 @@ import {
   USER_REPOSITORY,
   UserRepository,
 } from './domain/user.repository.interface';
-import { EmailLoginInput, EmailLoginOutput } from './dto/email-login.dto';
+import { EmailSignInInput, EmailSignInOutput } from './dto/email.sign-in.dto';
 
 @Injectable()
-export class EmailLoginUsecase {
+export class EmailSignInUsecase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
@@ -19,7 +19,7 @@ export class EmailLoginUsecase {
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(input: EmailLoginInput): Promise<EmailLoginOutput> {
+  async execute(input: EmailSignInInput): Promise<EmailSignInOutput> {
     const user = await this.userRepository.findByEmail(input.email);
 
     if (!user) {

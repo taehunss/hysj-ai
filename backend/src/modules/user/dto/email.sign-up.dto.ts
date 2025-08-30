@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { User } from '../domain/user';
 
-export class CreateUserInput implements Partial<User> {
+export class EmailSignUpInput implements Partial<User> {
   @IsNotEmpty()
   @ApiProperty({ example: '김태훈' })
   nickname: string;
@@ -26,7 +26,7 @@ export class CreateUserInput implements Partial<User> {
   password: string;
 }
 
-export class CreateUserOutput implements Partial<User> {
+export class EmailSignUpOutput implements Partial<User> {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 1 })
