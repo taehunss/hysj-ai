@@ -1,6 +1,6 @@
 export class AccessTokenPayload {
   constructor(
-    public readonly sub: number,
+    public readonly code: string,
     public readonly name: string,
     public readonly email: string,
   ) {}

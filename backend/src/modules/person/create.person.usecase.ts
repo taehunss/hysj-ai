@@ -5,6 +5,7 @@ import { PersonEntity } from 'src/infrastructure/database/entity/person.entity';
 import { UserEntity } from 'src/infrastructure/database/entity/user.entity';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { CreatePersonDto } from './dto/create.person.dto';
 import { PersonDto } from './dto/person.dto';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class CreatePersonUsecase {
     @Inject(LOGGER)
     private readonly logger: Logger,
   ) {}
-  async execute(input: PersonDto): Promise<PersonDto> {
+  async execute(input: CreatePersonDto): Promise<PersonDto> {
     const users = await this.userRepository.find();
     const person = this.personRepository.create(input);
     person.code = uuidv4();

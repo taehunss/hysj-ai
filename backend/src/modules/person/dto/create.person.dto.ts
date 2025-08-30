@@ -9,22 +9,9 @@ import {
   Min,
   ValidateIf,
 } from 'class-validator';
-import { Person } from '../domain/person';
+import { CalendarType, Gender } from './person.dto';
 
-export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
-}
-export enum CalendarType {
-  SOLAR = 'solar',
-  LUNAR = 'lunar',
-}
-
-export class PersonDto implements Person {
-  @IsNotEmpty()
-  @ApiProperty({ example: '1234567890' })
-  code: string;
-
+export class CreatePersonDto {
   @IsNotEmpty()
   @ApiProperty({ example: '김태훈' })
   name: string;

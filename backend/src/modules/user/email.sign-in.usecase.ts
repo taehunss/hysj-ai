@@ -1,7 +1,7 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 import { EnvConfigService } from 'src/infrastructure/env-config/env-config.service';
+import { JwtDomainService } from './domain/jwt.domain-service';
 import {
   USER_REPOSITORY,
   UserRepository,
@@ -16,7 +16,7 @@ export class EmailSignInUsecase {
     @Inject(LOGGER)
     private readonly logger: Logger,
     private readonly configService: EnvConfigService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtDomainService,
   ) {}
 
   async execute(input: EmailSignInInput): Promise<EmailSignInOutput> {
@@ -31,14 +31,11 @@ export class EmailSignInUsecase {
       throw new UnauthorizedException('Invalid password');
     }
 
-    const accessToken = this.jwtService.sign(
-      {
-        sub: user.id,
-        name: user.nickname,
-        email: user.email,
-      },
-      { secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET') },
-    );
+    const accessToken = this.jwtService.sign({
+      code: user.code,
+      name: user.nickname,
+      email: user.email,
+    });
 
     return {
       accessToken,

@@ -38,13 +38,9 @@ export class JwtCookieStrategy extends PassportStrategy(
   }
 
   validate(payload: AccessTokenPayload): UserAuth {
-    const userAuth: UserAuth = new UserAuth(
-      payload.sub,
-      payload.name,
-      payload.email,
-    );
+    const userAuth: UserAuth = new UserAuth(payload);
 
-    this.logger.log(`Pass JWT Cookie Guard - ${userAuth.id}`);
+    this.logger.log(`Pass JWT Cookie Guard - ${userAuth.code}`);
     return userAuth;
   }
 }

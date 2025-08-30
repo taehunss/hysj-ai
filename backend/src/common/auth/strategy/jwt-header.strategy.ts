@@ -37,11 +37,7 @@ export class JwtHeaderStrategy extends PassportStrategy(
   }
 
   validate(payload: AccessTokenPayload): UserAuth {
-    const userAuth: UserAuth = new UserAuth(
-      payload.sub,
-      payload.name,
-      payload.email,
-    );
+    const userAuth: UserAuth = new UserAuth(payload);
 
     return userAuth;
   }

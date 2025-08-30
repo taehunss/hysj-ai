@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { USER_REPOSITORY } from 'src/modules/user/domain/user.repository.interface';
+import { UserRepositoryImpl } from '../../modules/user/infrastructure/user.repository.impl';
 import { EnvConfigService } from '../env-config/env-config.service';
 import { PersonEntity } from './entity/person.entity';
 import { UserEntity } from './entity/user.entity';
-import { UserRepositoryImpl } from './repository/user.repository.impl';
 import { typeOrmConfig } from './typeorm.config';
 
 @Module({
