@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserAuth } from 'src/common/auth/interface/user-auth.interface';
 import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 import { PersonEntity } from 'src/infrastructure/database/entity/person.entity';
 import { UserEntity } from 'src/infrastructure/database/entity/user.entity';
@@ -18,11 +19,18 @@ export class CreatePersonUsecase {
     @Inject(LOGGER)
     private readonly logger: Logger,
   ) {}
-  async execute(input: CreatePersonDto): Promise<PersonDto> {
-    const users = await this.userRepository.find();
+  async execute(
+    userAuth: UserAuth,
+    input: CreatePersonDto,
+  ): Promise<PersonDto> {
+    const user = await this.userRepository.findOne({
+      where: {
+        code: userAuth.code,
+      },
+    });
     const person = this.personRepository.create(input);
     person.code = uuidv4();
-    person.user = users[0];
+    person.user = user;
     await this.personRepository.save(person);
     return person;
   }

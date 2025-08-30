@@ -17,8 +17,11 @@ export class PersonController {
   ) {}
 
   @Post()
-  async createPersonalInfo(@Body() body: CreatePersonDto): Promise<PersonDto> {
-    return this.createPersonalInfoUsecase.execute(body);
+  async createPersonalInfo(
+    @GetUser() userAuth: UserAuth,
+    @Body() body: CreatePersonDto,
+  ): Promise<PersonDto> {
+    return this.createPersonalInfoUsecase.execute(userAuth, body);
   }
 
   @Get()

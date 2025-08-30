@@ -33,7 +33,7 @@ class ChatSocketClient {
     });
 
     socket.on("connect", () => callbacks?.onConnect?.(socket.id ?? ""));
-    socket.on("chat:delta  ", (data: string) => callbacks?.onDelta?.(data));
+    socket.on("chat:delta", (data: string) => callbacks?.onDelta?.(data));
     socket.on("chat:response", (data: { message: string }) => {
       callbacks?.onResponse?.(data?.message);
       // 응답 완료 시 연결 종료 요구사항

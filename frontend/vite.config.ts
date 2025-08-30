@@ -7,6 +7,11 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      "/persons": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+        secure: false,
+      },
       "/users": {
         target: "http://localhost:3333",
         changeOrigin: true,

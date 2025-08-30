@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { useAuth } from "../../context/AuthContext";
 import { useChatSocket } from "../hook/useChatSocket";
+import { useGetPersons } from "../hook/useGetPersons";
 import { BirthInfoModal } from "./BirthInfoModal";
 import {
   AvatarCircle,
@@ -16,6 +17,9 @@ import {
   HeaderContent,
   InputBar,
   IntroTitle,
+  IntroTitle2,
+  IntroTitle3,
+  IntroTitle4,
   Logo,
   LogoutButton,
   Main,
@@ -35,11 +39,15 @@ const ChatRoom: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [input, setInput] = useState("");
   const { messages, sendMessage } = useChatSocket();
+  const { persons, getPersons } = useGetPersons();
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    getPersons().then((result) => {
+      console.log(`result: ${JSON.stringify(result)}`);
+    });
   }, [messages]);
 
   const onSend = () => {
@@ -81,8 +89,7 @@ const ChatRoom: React.FC = () => {
           ☰
         </HamburgerButton>
         <HeaderContent>
-          <Logo src="/hysj-logo.png" alt="hysj logo" />
-          <h3>안녕하세요. 한양사주 AI 입니다.</h3>
+          <h3>새로운 채팅</h3>
         </HeaderContent>
       </Header>
       <Backdrop open={sidebarOpen} onClick={closeSidebar} />
@@ -90,10 +97,23 @@ const ChatRoom: React.FC = () => {
       <Main>
         {messages.length === 0 ? (
           <Card>
-            <IntroTitle>내 사주가 궁금하다면?</IntroTitle>
-            <CTA onClick={() => setModalOpen(true)}>
-              생년월일 입력하러 가기 〉
-            </CTA>
+            <Logo src="/hysj-logo.png" alt="hysj logo" />
+            <IntroTitle>
+              안녕하세요. {persons[0].name} 님,
+              <br />
+              한양사주 AI 입니다.
+            </IntroTitle>
+            {persons.length > 0 ? (
+              <>
+                <IntroTitle3>무엇이든 물어보세요!</IntroTitle3>
+              </>
+            ) : (
+              <CTA onClick={() => setModalOpen(true)}>
+                <IntroTitle2>내 사주가 궁금하다면?</IntroTitle2>
+                <br />
+                <IntroTitle4>생년월일 입력하러 가기</IntroTitle4>
+              </CTA>
+            )}
           </Card>
         ) : (
           <ChatListCard>

@@ -118,7 +118,23 @@ export const CTA = styled.button`
 `;
 
 export const IntroTitle = styled.div`
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 24px;
+`;
+
+export const IntroTitle2 = styled.div`
+  font-weight: 600;
+  font-size: 18px;
+`;
+
+export const IntroTitle3 = styled.div`
+  font-weight: 400;
+  font-size: 16px;
+`;
+
+export const IntroTitle4 = styled.div`
+  font-weight: 400;
+  font-size: 14px;
 `;
 
 export const InputBar = styled.form`
@@ -163,8 +179,8 @@ export const HeaderContent = styled.div`
 `;
 
 export const Logo = styled.img`
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: contain;
 `;
