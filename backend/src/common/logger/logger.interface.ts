@@ -3,4 +3,6 @@ export interface Logger {
   error(message: string, ...optionalParams: any[]): void;
   warn(message: string, ...optionalParams: any[]): void;
   debug(message: string, ...optionalParams: any[]): void;
+  setContext(context: string): void;
 }
+export const LOGGER = Symbol('LOGGER');

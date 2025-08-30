@@ -1,23 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
-import { UserEntity } from 'src/infrastructure/database/entity/user.entity';
-import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { UserDto } from './dto/user.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { User } from './domain/user';
+import {
+  USER_REPOSITORY,
+  UserRepository,
+} from './domain/user.repository.interface';
+import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 
 @Injectable()
 export class CreateUserUsecase {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: UserRepository,
   ) {}
 
-  async execute(input: UserDto) {
-    const user = this.userRepository.create(input);
-    user.code = uuidv4();
-    user.password = await bcrypt.hash(user.password, 10);
-    await this.userRepository.save(user);
-    return user;
+  async execute(input: CreateUserInput): Promise<CreateUserOutput> {
+    const user = await User.create(input);
+    const savedUser = await this.userRepository.save(user);
+    return {
+      code: savedUser.code,
+      nickname: savedUser.nickname,
+      email: savedUser.email,
+    };
   }
 }

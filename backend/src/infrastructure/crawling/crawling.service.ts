@@ -1,13 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Browser, Page } from 'puppeteer';
 
-import { TSLogger } from '../logger/logger';
+import { LOGGER } from 'src/common/logger/logger.interface';
 import { BrowserManager } from './browser/browser.manager';
 
 @Injectable()
 export class CrawlingService {
   constructor(
-    private readonly logger: TSLogger,
+    @Inject(LOGGER)
+    private readonly logger: Logger,
     private readonly browserManager: BrowserManager,
   ) {}
 

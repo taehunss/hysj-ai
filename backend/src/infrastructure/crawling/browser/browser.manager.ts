@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import puppeteer, { Browser, Page } from 'puppeteer';
-import { TSLogger } from '../../logger/logger';
+import { LOGGER } from 'src/common/logger/logger.interface';
 
 @Injectable()
 export class BrowserManager {
   private browsers: Set<Browser>;
-  constructor(private readonly logger: TSLogger) {
+  constructor(
+    @Inject(LOGGER)
+    private readonly logger: Logger,
+  ) {
     this.browsers = new Set();
   }
   async getPage(url: string): Promise<{

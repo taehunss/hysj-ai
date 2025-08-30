@@ -8,4 +8,4 @@ export interface UserRepository {
   delete(id: number): Promise<void>;
 }
 
-export const USER_REPOSITORY = 'USER_REPOSITORY';
+export const USER_REPOSITORY = Symbol('USER_REPOSITORY');

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
   OnGatewayConnection,
@@ -7,7 +7,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { TSLogger } from './logger';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 
 @Injectable()
 @WebSocketGateway({
@@ -24,7 +24,10 @@ import { TSLogger } from './logger';
 export class LogViewerGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly logger: TSLogger) {}
+  constructor(
+    @Inject(LOGGER)
+    private readonly logger: Logger,
+  ) {}
   @WebSocketServer() server: Server;
   private clients: number = 0;
 

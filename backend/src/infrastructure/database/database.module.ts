@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { USER_REPOSITORY } from 'src/modules/user/domain/user.repository.interface';
 import { EnvConfigService } from '../env-config/env-config.service';
+import { PersonEntity } from './entity/person.entity';
+import { UserEntity } from './entity/user.entity';
+import { UserRepositoryImpl } from './repository/user.repository.impl';
 import { typeOrmConfig } from './typeorm.config';
 
 @Module({
@@ -10,8 +14,14 @@ import { typeOrmConfig } from './typeorm.config';
         typeOrmConfig(configService),
       inject: [EnvConfigService],
     }),
+    TypeOrmModule.forFeature([UserEntity, PersonEntity]),
   ],
-  providers: [],
-  exports: [],
+  providers: [
+    {
+      provide: USER_REPOSITORY,
+      useClass: UserRepositoryImpl,
+    },
+  ],
+  exports: [USER_REPOSITORY],
 })
 export class DatabaseModule {}

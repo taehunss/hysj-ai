@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy } from 'passport-jwt';
-import { TSLogger } from 'src/infrastructure/logger/logger';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 import { AccessTokenPayload } from '../interface/access-token.payload';
 import { UserAuth } from '../interface/user-auth.interface';
 /**
@@ -17,7 +17,8 @@ export class JwtHeaderStrategy extends PassportStrategy(
   'jwt-header',
 ) {
   constructor(
-    private readonly logger: TSLogger,
+    @Inject(LOGGER)
+    private readonly logger: Logger,
     private readonly configService: ConfigService,
   ) {
     const secretKey = configService.get('JWT_ACCESS_TOKEN_SECRET');

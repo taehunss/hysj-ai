@@ -4,15 +4,19 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { TSLogger } from 'src/infrastructure/logger/logger';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 
 @Catch(HttpException)
 @Injectable()
 export class HttpExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: TSLogger) {}
+  constructor(
+    @Inject(LOGGER)
+    private readonly logger: Logger,
+  ) {}
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

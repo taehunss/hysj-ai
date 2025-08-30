@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as openai from 'openai';
 import { ResponseStreamParams } from 'openai/lib/responses/ResponseStream';
 import type { ResponseStreamEvent } from 'openai/resources/responses/responses';
 import { Observable } from 'rxjs';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 import { EnvConfigService } from '../env-config/env-config.service';
-import { TSLogger } from '../logger/logger';
 
 export type ChatGPTResponseStream = any;
 export interface ChatGPTResponseHandlers {
@@ -17,7 +17,8 @@ export class ChatGPTModel {
   private readonly openai: openai.OpenAI;
   constructor(
     private readonly configService: EnvConfigService,
-    private readonly logger: TSLogger,
+    @Inject(LOGGER)
+    private readonly logger: Logger,
   ) {
     this.openai = new openai.OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy } from 'passport-jwt';
-import { Logger } from 'src/common/logger/logger.interface';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 import { EnvConfigService as ConfigService } from 'src/infrastructure/env-config/env-config.service';
 import { AccessTokenPayload } from '../interface/access-token.payload';
 import { UserAuth } from '../interface/user-auth.interface';
@@ -18,6 +18,7 @@ export class JwtCookieStrategy extends PassportStrategy(
   'jwt-cookie',
 ) {
   constructor(
+    @Inject(LOGGER)
     private readonly logger: Logger,
     private readonly configService: ConfigService,
   ) {

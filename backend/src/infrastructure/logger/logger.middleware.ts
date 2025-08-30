@@ -1,10 +1,10 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { TSLogger } from './logger';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  constructor(private readonly logger: TSLogger) {
+  constructor(@Inject(LOGGER) private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

@@ -2,8 +2,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { LOGGER } from './common/logger/logger.interface';
 import { EnvConfigService } from './infrastructure/env-config/env-config.service';
-import { TSLogger } from './infrastructure/logger/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +11,7 @@ async function bootstrap() {
   const configService = app.get(EnvConfigService);
   // main.ts
   app.enableCors({
-    origin: (origin, cb) => cb(null, true), // 모든 호스트 허용 (credentials와 함께 사용 가능)
+    origin: '*',
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
@@ -22,7 +22,7 @@ async function bootstrap() {
     ],
     exposedHeaders: ['Content-Disposition'],
   });
-  const logger = app.get(TSLogger);
+  const logger = app.get(LOGGER);
   app.useGlobalPipes(new ValidationPipe());
   const serverPort = configService.get<number>('SERVER_PORT');
   logger.log(`Server is running on port ${serverPort}`);

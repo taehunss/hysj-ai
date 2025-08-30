@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 import { PersonEntity } from 'src/infrastructure/database/entity/person.entity';
 import { UserEntity } from 'src/infrastructure/database/entity/user.entity';
-import { TSLogger } from 'src/infrastructure/logger/logger';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { PersonDto } from './dto/person.dto';
@@ -14,7 +14,8 @@ export class CreatePersonUsecase {
     private readonly personRepository: Repository<PersonEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly logger: TSLogger,
+    @Inject(LOGGER)
+    private readonly logger: Logger,
   ) {}
   async execute(input: PersonDto): Promise<PersonDto> {
     const users = await this.userRepository.find();

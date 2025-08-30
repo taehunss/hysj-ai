@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Solar } from 'lunar-typescript';
 import { ResponseStreamParams } from 'openai/lib/responses/ResponseStream';
 import { Socket } from 'socket.io';
+import { LOGGER, Logger } from 'src/common/logger/logger.interface';
 import { PersonEntity } from 'src/infrastructure/database/entity/person.entity';
 import { ChatGPTModel } from 'src/infrastructure/llm-model/chat-gpt.model';
-import { TSLogger } from 'src/infrastructure/logger/logger';
 import { WebSocketService } from 'src/infrastructure/web-socket/web-socket.service';
 import { Repository } from 'typeorm';
 import { ChatEvent } from './event/chat.event';
@@ -15,7 +15,8 @@ import { BASE_INSTRUCTIONS } from './prompt/base.prompt';
 @Injectable()
 export class ChatHandler {
   constructor(
-    private readonly logger: TSLogger,
+    @Inject(LOGGER)
+    private readonly logger: Logger,
     private readonly chatGPTModel: ChatGPTModel,
     private readonly ws: WebSocketService,
     @InjectRepository(PersonEntity)
@@ -44,7 +45,6 @@ export class ChatHandler {
 
   // 스트림을 노출해 게이트웨이/레지스트라에서 직접 전달 가능
   async handle(event: ChatEvent) {
-    this.logger.log(this.constructor.name, event);
     const person = (await this.personRepository.find())[0];
     const solar = Solar.fromYmdHms(
       person.birthYear,
@@ -74,7 +74,7 @@ export class ChatHandler {
       ],
       instructions: BASE_INSTRUCTIONS,
     };
-    this.logger.log(this.constructor.name, JSON.stringify(input));
+    this.logger;
     return this.chatGPTModel.generateResponseStream(input, 'gpt-4o');
   }
 }

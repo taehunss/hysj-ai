@@ -50,17 +50,19 @@ export class UserRepositoryImpl implements UserRepository {
 
   // 매핑 메서드들
   private toDomain(userEntity: UserEntity): User {
-    return new User(
-      userEntity.id,
-      userEntity.nickname,
-      userEntity.email,
-      userEntity.password,
-    );
+    return new User({
+      id: userEntity.id,
+      code: userEntity.code,
+      nickname: userEntity.nickname,
+      email: userEntity.email,
+      password: userEntity.password,
+    });
   }
 
   private toEntity(user: User): UserEntity {
     const userEntity = new UserEntity();
     userEntity.id = user.id;
+    userEntity.code = user.code;
     userEntity.nickname = user.nickname;
     userEntity.email = user.email;
     userEntity.password = user['password']; // private 필드 접근
